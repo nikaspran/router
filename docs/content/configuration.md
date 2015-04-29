@@ -37,7 +37,7 @@ MyController.$routeConfig = [
 
 
 <!-- Angular 2 + TypeScript -->
-```js
+```ts
 @Component({})
 @View({
   template:
@@ -106,7 +106,7 @@ function MyController() {}
 ```
 <!-- End Angular 1 -->
 <!-- Angular 2 -->
-```js
+```ts
 @Component({})
 @View({
   directives: [RouterOutlet]
@@ -134,7 +134,7 @@ MyController.$routeConfig = [
 ```
 <!-- End Angular 1 -->
 <!-- Angular 2 -->
-```js
+```ts
 @Component({})
 @View({
   directives: [RouterOutlet]

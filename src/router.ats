@@ -48,7 +48,7 @@ class Router {
 
   /**
    * @description
-   * Update the routing configuation and trigger a navigation.
+   * Update the routing configuration and trigger a navigation.
    *
    * ```js
    * router.config({ path: '/', component: '/user' });
@@ -64,7 +64,7 @@ class Router {
 
   /**
    * @description Navigate to a URL.
-   * Returns the cannonical URL for the route navigated to.
+   * Returns the canonical URL for the route navigated to.
    */
   navigate(url) {
     if (this.navigating) {
@@ -164,7 +164,7 @@ class Router {
 
 
   /**
-   * @description Navigates to either the last URL successfully naviagted to,
+   * @description Navigates to either the last URL successfully navigated to,
    * or the last URL requested if the router has yet to successfully navigate.
    * You shouldn't need to use this API very often.
    */
