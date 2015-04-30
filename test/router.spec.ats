@@ -167,13 +167,11 @@ describe('RootRouter', () => {
 
       it('should generate URLs', sync(async () => {
         expect(child.generate('C')).toBe('/a/c');
-        expect(router.generate('C')).toBe('/a/c');
       }));
 
       it('should generate URLs with params', sync(async () => {
         await child.config({ path: '/d/:param', component: 'D'});
         expect(child.generate('D', {param: 'foo'})).toBe('/a/d/foo');
-        expect(router.generate('D', {param: 'foo'})).toBe('/a/d/foo');
       }));
 
       // TODO: test recursive routes

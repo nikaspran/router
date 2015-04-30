@@ -66,8 +66,8 @@ class Router {
    * @description Navigate to a URL.
    * Returns the cannonical URL for the route navigated to.
    */
-  navigate(url) {
-    if (this.navigating) {
+  navigate(url, force) {
+    if (this.navigating || (!force && url === this.lastCanonicalUrl)) {
       return Promise.resolve();
     }
 
@@ -84,7 +84,7 @@ class Router {
     instruction.router = this;
     return this.pipeline.process(instruction)
         .then(() => this._finishNavigating(), () => this._finishNavigating())
-        .then(() => instruction.canonicalUrl);
+        .then(() => this.lastCanonicalUrl = instruction.canonicalUrl);
   }
 
   _startNavigating() {
@@ -129,6 +129,9 @@ class Router {
    */
   activateOutlets(instruction) {
     return this.queryOutlets((outlet, name) => {
+      if (!instruction.outlets[name]) {
+        return Promise.resolve();
+      }
       return outlet.activate(instruction.outlets[name]);
     })
     .then(() => mapObjAsync(instruction.outlets, (instruction) => {
@@ -171,7 +174,7 @@ class Router {
   renavigate() {
     var renavigateDestination = this.previousUrl || this.lastNavigationAttempt;
     if (!this.navigating && renavigateDestination) {
-      return this.navigate(renavigateDestination);
+      return this.navigate(renavigateDestination, true);
     } else {
       return Promise.resolve();
     }
@@ -183,9 +186,17 @@ class Router {
    * The URL is relative to the app's base href.
    */
   generate(name:string, params) {
-    return this.registry.generate(name, params);
+    return this.registry.generate(name, params, this._buildRouterChain());
   }
 
+  _buildRouterChain() {
+    var routerChain = [], current = this;
+    while (current) {
+      routerChain.push(current.name);
+      current = current.parent;
+    }
+    return routerChain;
+  }
 }
 
 export class RootRouter extends Router {

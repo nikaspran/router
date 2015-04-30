@@ -721,7 +721,7 @@ describe('ngOutlet', function () {
       Ctrl.prototype = componentConstructor;
       componentConstructor = Ctrl;
     }
-    Ctrl.$routeConfig = routeConfig;
+    Ctrl.$routeConfig = Ctrl.$routeConfig || routeConfig;
     $controllerProvider.register(componentControllerName(name), componentConstructor);
     put(name, template);
   }

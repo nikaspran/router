@@ -53,7 +53,10 @@ export class Grammar {
         instruction.outlets[outletName] = this.recognize(childUrl, componentName);
       });
 
-      instruction.canonicalUrl += instruction.outlets[Object.keys(instruction.outlets)[0]].canonicalUrl;
+      let firstChildOutlet = instruction.outlets[Object.keys(instruction.outlets)[0]];
+      if (firstChildOutlet) {
+        instruction.canonicalUrl += firstChildOutlet.canonicalUrl;
+      }
     } else {
       instruction.canonicalUrl = lastHandler.rewroteUrl;
       forEach(lastHandler.components, (componentName, outletName) => {
@@ -71,17 +74,24 @@ export class Grammar {
     return instruction;
   }
 
-  generate(name, params) {
+  generate(name, params, recognizerChain = []) {
     var path = '';
     var solution;
     do {
       solution = null;
-      forEach(this.rules, recognizer => {
-        if (recognizer.hasRoute(name)) {
-          path = recognizer.generate(name, params) + path;
+
+      recognizerChain.some(recognizerName => {
+        var recognizer = this.rules[recognizerName];
+        if (recognizer && recognizer.hasRoute(name)) {
           solution = recognizer;
+          return true;
         }
       });
+
+      if (solution) {
+        path = solution.generate(name, params) + path;
+      }
+
       if (!solution) {
         return '';
       }
